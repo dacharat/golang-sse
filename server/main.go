@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -70,6 +71,14 @@ func main() {
 			}
 			return false
 		})
+	})
+
+	router.GET("/push", func(c *gin.Context) {
+		message := c.Query("message")
+
+		stream.Message <- message
+
+		c.Status(http.StatusNoContent)
 	})
 
 	router.Run(":8080")
